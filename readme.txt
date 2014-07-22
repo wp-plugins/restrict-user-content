@@ -4,7 +4,7 @@ Donate link: http://www.ryanwelcher.com/donate/
 Tags: users, media, posts, pages, admin
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 1.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,3 +44,7 @@ You can use the above to your advantage by creating example content for users an
 
 = 1.0 =
 * plugin created
+
+= 1.0.1 =
+* bug fix for undefined variable on re-activation because I'm a hack.
+* added proper cleanup if plugin is deleted - don't know why you'd want to do something like that, but there it is.
