@@ -3,7 +3,7 @@
  * Plugin Name: Restrict User Content
  * Description: Limits the Posts/Media pages to only show content created by the logged in user.
  * Author: Ryan Welcher
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author URI: http://www.ryanwelcher.com
  * Text Domain: ruc
  */
@@ -88,10 +88,8 @@ if ( ! class_exists('Restrict_User_Content') ) :
 
 			if(strpos( $_SERVER[ 'REQUEST_URI' ], '/wp-admin/upload.php' ) !== false ) {
 
-				$query->set( 'author__in', array('1') );
-
 				if ( !current_user_can( 'update_core' ) ) {
-					$query->set( 'author__in', array('1')/*$this->ruc_create_list_of_user_ids()*/ );
+					$query->set( 'author__in', $this->ruc_create_list_of_user_ids() );
 				}
 			}
 		}
@@ -125,10 +123,10 @@ if ( ! class_exists('Restrict_User_Content') ) :
 		 */
 		function ruc_ajax_attachments_useronly( $query ) {
 
-			if( !current_user_can( 'update_core' ) ) {
+			if ( ! current_user_can( 'update_core' ) ) {
 				$users = $this->ruc_create_list_of_user_ids();
 
-				$query['author__in'] = $users; //array( '373' );
+				$query['author__in'] = $users;
 			}
 
 			return $query;
@@ -199,14 +197,17 @@ if ( ! class_exists('Restrict_User_Content') ) :
 		 */
 		function rw_plugin_create_meta_boxes() {
 
-			//debug area
-			add_meta_box(
-				'debug_area', //Meta box ID
-				__('Debug', 'ruc'), //Meta box Title
-				array(&$this, 'rw_render_debug_setting_box'), //Callback defining the plugin's innards
-				'settings_page_'.$this->_pagename, // Screen to which to add the meta box
-				'side' // Context
-			);
+			if ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) {
+				//debug area
+				add_meta_box(
+					'debug_area', //Meta box ID
+					__( 'Debug', 'ruc' ), //Meta box Title
+					array(&$this, 'rw_render_debug_setting_box'), //Callback defining the plugin's innards
+					'settings_page_'.$this->_pagename, // Screen to which to add the meta box
+					'side' // Context
+				);
+			}
+
 
 			//-- additional users to allow
 			add_meta_box(
